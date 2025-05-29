@@ -1,13 +1,8 @@
 import { type Metadata } from 'next'
-import {
-  ClerkProvider,
-  SignInButton,
-  SignUpButton,
-  SignedIn,
-  SignedOut,
-  UserButton,
-} from '@clerk/nextjs'
+
 import './globals.css'
+import Header from '@/components/Header'
+import { ClerkProvider } from '@clerk/nextjs'
 
 
 
@@ -22,21 +17,13 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <ClerkProvider>
-      <html lang="en">
+      <ClerkProvider>
+        <html lang="en">
         <body>
-          <header className="flex justify-end items-center p-4 gap-4 h-16">
-            <SignedOut>
-              <SignInButton />
-              <SignUpButton />
-            </SignedOut>
-            <SignedIn>
-              <UserButton />
-            </SignedIn>
-          </header>
+          <Header />
           {children}
         </body>
       </html>
-    </ClerkProvider>
+      </ClerkProvider>
   )
 }

@@ -1,0 +1,49 @@
+'use client'
+import {
+  SignInButton,
+  SignUpButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+} from '@clerk/nextjs'
+
+import { useUser } from "@clerk/nextjs"
+
+const Header = () => {
+  const {user} = useUser();
+
+  return (
+    <div className=" flex items-start justify-between min-h-screen bg-gray-50 text-gray-800 px-6 py-8">
+  {/* Page Heading */}
+  {user && (
+    <h1 className="text-3xl font-bold mb-4">
+      {user?.firstName}
+      <span className="text-blue-600 font-semibold ml-1">'s Space</span>
+    </h1>
+  )}
+
+  {/* Breadcrumbs Placeholder */}
+  {/* <nav className="text-sm text-gray-500 mb-6">
+    <ol className="flex space-x-2">
+      <li><a href="/" className="hover:underline text-blue-500">Home</a></li>
+      <li>/</li>
+      <li className="text-gray-700">Dashboard</li>
+    </ol>
+  </nav> */}
+
+  {/* Auth Buttons */}
+  <div className="">
+    <SignedOut>
+      <SignInButton />
+      <SignUpButton />
+    </SignedOut>
+    <SignedIn>
+      <UserButton />
+    </SignedIn>
+  </div>
+
+    </div>
+  )
+}
+
+export default Header

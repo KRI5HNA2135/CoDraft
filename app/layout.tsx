@@ -1,10 +1,9 @@
+// app/layout.tsx
 import { type Metadata } from 'next'
-
 import './globals.css'
 import Header from '@/components/Header'
 import { ClerkProvider } from '@clerk/nextjs'
-
-
+import Sidebar from '@/components/Sidebar'
 
 export const metadata: Metadata = {
   title: 'Clerk Next.js Quickstart',
@@ -13,17 +12,23 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
-      <ClerkProvider>
-        <html lang="en">
-        <body>
+    <html lang="en">
+      <body className="bg-gray-50 text-gray-800 min-h-screen">
+        <ClerkProvider>
           <Header />
-          {children}
-        </body>
-      </html>
-      </ClerkProvider>
+          <main className="max-w-4xl mx-auto bg-white shadow-lg rounded-xl p-6 mt-8">
+
+          {/* Sidebar  */}
+          <Sidebar />
+
+            <div className='overflow-y-auto scrollbar-hide'>
+              {children}
+            </div>
+          </main>
+        </ClerkProvider>
+      </body>
+    </html>
   )
 }

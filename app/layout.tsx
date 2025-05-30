@@ -1,3 +1,4 @@
+// app/layout.tsx
 import { type Metadata } from 'next'
 import './globals.css'
 import Header from '@/components/Header'
@@ -17,17 +18,15 @@ export default function RootLayout({
       <body className="bg-gray-50 text-gray-800 min-h-screen">
         <ClerkProvider>
           <Header />
-          
-          {/* Main container with sidebar layout */}
-          <div className="flex h-[calc(100vh-4rem)]"> {/* Adjust height to account for header */}
-            {/* Sidebar - Fixed 20% width */}
-            <Sidebar />
-            
-            {/* Main content area - 80% width */}
-            <main className="flex-1 bg-white shadow-lg rounded-xl p-6 m-4 ml-0 overflow-y-auto scrollbar-hide">
+          <main className="max-w-4xl mx-auto bg-white shadow-lg rounded-xl p-6 mt-8">
+
+          {/* Sidebar  */}
+          <Sidebar  />
+
+            <div className='overflow-y-auto scrollbar-hide'>
               {children}
-            </main>
-          </div>
+            </div>
+          </main>
         </ClerkProvider>
       </body>
     </html>

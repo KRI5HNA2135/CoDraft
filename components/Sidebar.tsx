@@ -1,38 +1,20 @@
+// components/Sidebar.tsx
 'use client'
 
 import { Button } from "@/components/ui/button"
-import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
-import { X, ChevronLeft } from "lucide-react"
+import { ScrollArea } from "@/components/ui/scroll-area"
 import { cn } from "@/lib/utils"
 
-interface SidebarProps {
-  isOpen: boolean
-  onToggle: () => void
-}
-
-const Sidebar = ({ isOpen, onToggle }: SidebarProps) => {
+const Sidebar = () => {
   return (
-    <aside className="w-80 h-screen bg-white border-r shadow-sm p-4 flex flex-col">
-      {/* Sidebar Header with Close Button */}
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="font-semibold text-gray-900">Documents</h2>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={onToggle}
-          className="p-1 hover:bg-gray-100"
-        >
-          <ChevronLeft className="h-4 w-4" />
-        </Button>
-      </div>
-
+    <aside className="w-64 h-full bg-white border-r shadow-sm p-4 flex flex-col">
       <Button className="mb-4" variant="default">New Document</Button>
 
       <ScrollArea className="flex-1">
         {/* My Documents */}
         <div>
-          <h3 className="text-sm font-semibold text-gray-600 mb-2">My Documents</h3>
+          <h2 className="text-sm font-semibold text-gray-600 mb-2">My Documents</h2>
           <nav className="space-y-2">
             <SidebarItem label="✍️ Legal Agreement" />
             <SidebarItem label="New Doc 123" />
@@ -43,7 +25,7 @@ const Sidebar = ({ isOpen, onToggle }: SidebarProps) => {
 
         {/* Shared with Me */}
         <div>
-          <h3 className="text-sm font-semibold text-gray-600 mb-2">Shared with Me</h3>
+          <h2 className="text-sm font-semibold text-gray-600 mb-2">Shared with Me</h2>
           <nav className="space-y-2">
             <SidebarItem label="👥 Team Plan" />
             <SidebarItem label="📆 Weekly OKRs" />

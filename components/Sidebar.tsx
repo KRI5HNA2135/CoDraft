@@ -1,11 +1,19 @@
 // components/Sidebar.tsx
-'use client'
+"use client";
 
-import { Button } from "@/components/ui/button"
-import { Separator } from "@/components/ui/separator"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { cn } from "@/lib/utils"
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "./ui/sheet"
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { cn } from "@/lib/utils";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "./ui/sheet";
+import NewDocumentButton from "./NewDocumentButton";
 
 const Sidebar = () => {
   // return (
@@ -38,24 +46,37 @@ const Sidebar = () => {
   //   </aside>
   // )
 
-
   return (
-    <Sheet>
-  <SheetTrigger>Open</SheetTrigger>
-  <SheetContent>
-    <SheetHeader>
-      <SheetTitle>Are you absolutely sure?</SheetTitle>
-      <SheetDescription>
-        This action cannot be undone. This will permanently delete your account
-        and remove your data from our servers.
-      </SheetDescription>
-    </SheetHeader>
-  </SheetContent>
-</Sheet>
-  )
-}
+    <div>
+      <Sheet>
+        <SheetTrigger>Open</SheetTrigger>
+        <SheetContent>
+          <SheetHeader>
+            <SheetTitle>Are you absolutely sure?</SheetTitle>
+            <SheetDescription>
+              This action cannot be undone. This will permanently delete your
+              account and remove your data from our servers.
+            </SheetDescription>
+          </SheetHeader>
+        </SheetContent>
+      </Sheet>
 
-const SidebarItem = ({ label, active = false }: { label: string; active?: boolean }) => {
+      <div>
+abv
+    <NewDocumentButton />
+
+      </div>
+    </div>
+  );
+};
+
+const SidebarItem = ({
+  label,
+  active = false,
+}: {
+  label: string;
+  active?: boolean;
+}) => {
   return (
     <button
       className={cn(
@@ -67,7 +88,7 @@ const SidebarItem = ({ label, active = false }: { label: string; active?: boolea
     >
       {label}
     </button>
-  )
-}
+  );
+};
 
-export default Sidebar
+export default Sidebar;

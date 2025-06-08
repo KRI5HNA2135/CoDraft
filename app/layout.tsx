@@ -18,15 +18,15 @@ export default function RootLayout({
       <body className="bg-gray-50 text-gray-800 min-h-screen">
         <ClerkProvider>
           <Header />
-          <main className="max-w-4xl mx-auto bg-white shadow-lg rounded-xl p-6 mt-8">
-
           {/* Sidebar  */}
           <Sidebar  />
+          <main className="max-w-5xl mx-auto p-6 mt-8">
 
             <div className='overflow-y-auto scrollbar-hide'>
               {children}
             </div>
           </main>
+          
         </ClerkProvider>
       </body>
     </html>

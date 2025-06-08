@@ -7,42 +7,46 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "./ui/sheet";
-import { Button } from "./ui/button";
-import { Menu } from "lucide-react";
+} from "@/components/ui/sheet";
+import { Menu, MenuIcon } from "lucide-react";
+import { useState } from "react";
+import NewDocumentButton from "./NewDocumentButton";
 
+export default function Sidebar() {
+  const [open, setOpen] = useState(false);
 
-const Sidebar = () => {
-  return (
+  const menuOptions = (
     <>
-    {/* Mobile ani tablet sathi  */}
-    <div className="p-3 ml-5 size-5">
-      <Sheet>
-  <SheetTrigger asChild>
-    <Button 
-      variant="ghost" 
-      className="p-2 hover:bg-muted hover:rounded-xl transition"
-    >
-      <Menu className="h-6 w-6 text-foreground" />
-    </Button>
-  </SheetTrigger>
+    <NewDocumentButton />
 
-  <SheetContent side="left" className="sm:max-w-xs">
-    <SheetHeader>
-      <SheetTitle className="text-lg font-semibold">
-        Are you absolutely sure?
-      </SheetTitle>
-      <SheetDescription className="text-sm text-muted-foreground mt-2">
-        This action cannot be undone. This will permanently delete your account
-        and remove your data from our servers.
-      </SheetDescription>
-    </SheetHeader>
-  </SheetContent>
-</Sheet>
+    {/* My Documents */}
+    {/* List */}
 
-    </div>
+    {/* Shared with me  */}
+    {/* List */}
+
     </>
-  );
-};
+  )
 
-export default Sidebar;
+  return (
+    <div className="p-2 md:p-5 bg-gray-200 relative">
+      <div className="md:hidden">
+        <Sheet>
+          <SheetTrigger>
+            <MenuIcon className="p-2 hover:opacity-30 rounded-lg  " size={40} />
+          </SheetTrigger>
+          <SheetContent side="left">
+            <SheetHeader>
+              <SheetTitle>Are you absolutely sure?</SheetTitle>
+              <div> {menuOptions} </div>
+            </SheetHeader>
+          </SheetContent>
+        </Sheet>
+      </div>
+
+      <div className="hidden md:inline">
+       {menuOptions}
+      </div>
+    </div>
+  );
+}

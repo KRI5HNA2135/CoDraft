@@ -3,8 +3,9 @@ import { Button } from './ui/button'
 
 const NewDocumentButton = () => {
   return (
-    <Button  >
-      NewDocumentButton</Button>
+    <Button>
+      New Documentation
+    </Button>
   )
 }
 

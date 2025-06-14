@@ -16,5 +16,6 @@ export async function createNewDoc() {
     title: "New Document"
   });
 
-  return docRef;
+  // return docRef;
+  await adminDb.collection('users').doc(sessionClaims?.email!)
 }

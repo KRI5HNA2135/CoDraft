@@ -33,7 +33,7 @@ export default function Sidebar() {
       <div className="md:hidden">
         <Sheet>
           <SheetTrigger>
-            <MenuIcon className="p-2 hover:opacity-30 rounded-lg  " size={40} />
+            <MenuIcon className="p-2 hover:opacity-30 rounded-lg" size={40} />
           </SheetTrigger>
           <SheetContent side="left">
             <SheetHeader>

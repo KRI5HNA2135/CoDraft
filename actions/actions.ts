@@ -19,7 +19,7 @@ export async function createNewDoc() {
   // return docRef;
   await adminDb
     .collection("users")
-    .doc(sessionClaims?.email!)
+    . doc(sessionClaims?.email!)
     .collection("rooms")
     .doc(docRef.id)
     .set({

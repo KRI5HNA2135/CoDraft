@@ -7,7 +7,7 @@ export async function createNewDoc() {
   const authInstance = await auth();
   const { sessionClaims } = authInstance;
 
-  const email = sessionClaims?.email;
+  const email = sessionClaims?.email as string;
 
   if (!email) {
     throw new Error("Unauthorized");

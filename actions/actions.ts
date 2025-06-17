@@ -1,36 +1,39 @@
 "use server";
 
-import { adminDb } from "@/firebase-admin";
 import { auth } from "@clerk/nextjs/server";
+import { adminDb } from "@/firebase-admin";
+import { User } from "@/types/types";
 
 export async function createNewDoc() {
-  const authInstance = await auth();
-  const { sessionClaims } = authInstance;
+  const { sessionClaims } = await auth();
 
-  const email = sessionClaims?.email as string;
-
-  if (!email) {
+  if (!sessionClaims) {
     throw new Error("Unauthorized");
   }
 
-  const docCollectionRef = adminDb.collection("documents");
-  const docRef = await docCollectionRef.add({
+  const user = sessionClaims as unknown as User;
+
+  if (!user.email) {
+    throw new Error("Missing email in session claims");
+  }
+
+  const docRef = await adminDb.collection("documents").add({
     title: "New Document",
+    owner: user.email,
+    createdAt: new Date(),
   });
 
-  // return docRef;
   await adminDb
     .collection("users")
-    .doc(email)
+    .doc(user.email!)
     .collection("rooms")
     .doc(docRef.id)
     .set({
-      userId: sessionClaims?.email!,
+      userId: user.email!,
       role: "owner",
       createdAt: new Date(),
       roomId: docRef.id,
     });
-    return { docId: docRef.id };
+
+  return { docId: docRef.id };
 }
-
-

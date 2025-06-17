@@ -8,7 +8,7 @@ const NewDocumentButton = () => {
 
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
-
+  
   const handleCreateNewDoc = () => {
     startTransition(async () => {
       const {docId} = await createNewDoc();

@@ -31,6 +31,9 @@ export default function Sidebar() {
   return (
     <div className="p-2 md:p-5 bg-gray-200 relative">
       <div className="md:hidden">
+
+      {/* here we are going to add the contents of functions or new task  */}
+
         <Sheet>
           <SheetTrigger>
             <MenuIcon className="p-2 hover:opacity-30 rounded-lg" size={40} />

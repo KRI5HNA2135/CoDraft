@@ -13,23 +13,23 @@ export async function createNewDoc() {
 
   const user = sessionClaims as unknown as User;
 
-  if (!user.email) {
+  if (!user.userId) {
     throw new Error("Missing email in session claims");
   }
 
   const docRef = await adminDb.collection("documents").add({
     title: "New Document",
-    owner: user.email,
+    owner: user.userId,
     createdAt: new Date(),
   });
 
   await adminDb
     .collection("users")
-    .doc(user.email!)
+    .doc(user.userId!)
     .collection("rooms")
     .doc(docRef.id)
     .set({
-      userId: user.email!,
+      userId: user.userId!,
       role: "owner",
       createdAt: new Date(),
       roomId: docRef.id,

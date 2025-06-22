@@ -3,17 +3,33 @@
 import {
   Sheet,
   SheetContent,
-  SheetDescription,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Menu, MenuIcon } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import NewDocumentButton from "./NewDocumentButton";
+import { useCollection } from "react-firebase-hooks/firestore";
+import { useUser } from "@clerk/nextjs";
+import { collectionGroup, query, where } from "firebase/firestore";
+import { db } from "@/firebase";
 
 export default function Sidebar() {
-  const [open, setOpen] = useState(false);
+  // const [open, setOpen] = useState(false);
+  const {user} = useUser();
+
+  const [data,loading,error] = useCollection(
+    user && 
+      query(
+      collectionGroup(db, 'rooms'),
+      where("userId", "==", user.emailAddresses[0].toString())
+    )
+  );
+
+  useEffect(() => {
+    if(!data) return;
+  })
 
   const menuOptions = (
     <>

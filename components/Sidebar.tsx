@@ -19,6 +19,14 @@ export default function Sidebar() {
   // const [open, setOpen] = useState(false);
   const {user} = useUser();
 
+  const [groupedData, setGroupedData] = useState<{
+    owner: RoomDocument[];
+    editor: RoomDocument[];
+  }>({
+    owner: [],
+    editor: [],
+  })
+
   const [data,loading,error] = useCollection(
     user && 
       query(
@@ -29,7 +37,33 @@ export default function Sidebar() {
 
   useEffect(() => {
     if(!data) return;
-  })
+
+    const grouped = data.docs.reduce<{
+      owner: RoomDocument[];
+      editor: RoomDocument[];
+    }>(
+      (acc, curr) => {
+        const roomData = curr.data() as RoomDocument;
+
+        if(roomData.role === "owner") {
+          acc.owner.push({
+            id: curr.id,
+            ...roomData,
+          })
+        } else {
+          acc.editor.push({
+            id: curr.id,
+            ...roomData,
+          })
+        }
+
+        return acc;
+      }, {
+        owner: [],
+        editor: [],
+      }
+    )
+  }, [data])
 
   const menuOptions = (
     <>

@@ -74,7 +74,8 @@ export default function Sidebar() {
         owner: [],
         editor: [],
       }
-    )
+    );
+    setGroupedData(grouped);
   }, [data])
 
   const menuOptions = (

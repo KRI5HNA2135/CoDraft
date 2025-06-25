@@ -2,34 +2,35 @@
 
 import { auth } from "@clerk/nextjs/server";
 import { adminDb } from "@/firebase-admin";
-import { User } from "@/types/types";
 
 export async function createNewDoc() {
-  const { sessionClaims } = await auth();
+  const { userId, sessionClaims } = await auth();
 
-  if (!sessionClaims) {
+  if (!userId || !sessionClaims) {
     throw new Error("Unauthorized");
   }
 
-  const user = sessionClaims as unknown as User;
+  const email = sessionClaims?.email as string | undefined;
+  const fullName = sessionClaims?.name as string | undefined;
+  const image = sessionClaims?.picture as string | undefined;
 
-  if (!user.email) {
-    throw new Error("Missing email in session claims");
+  if (!email || !fullName || !image) {
+    throw new Error("Missing user info in session");
   }
 
   const docRef = await adminDb.collection("documents").add({
     title: "New Document",
-    owner: user.email,
+    owner: email,
     createdAt: new Date(),
   });
 
   await adminDb
     .collection("users")
-    .doc(user.email!)
+    .doc(userId) // ✅ Correct doc path
     .collection("rooms")
     .doc(docRef.id)
     .set({
-      userId: user.email!,
+      userId: userId, // 🔥 Not email
       role: "owner",
       createdAt: new Date(),
       roomId: docRef.id,

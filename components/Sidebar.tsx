@@ -39,7 +39,9 @@ export default function Sidebar() {
       query(
         collectionGroup(db, "rooms"),
         where("userId", "==", user.id) // ✅ Clerk's unique user ID
+        
       )
+      
   );
 
   useEffect(() => {
@@ -49,7 +51,11 @@ export default function Sidebar() {
       owner: RoomDocument[];
       editor: RoomDocument[];
     }>(
+      
       (acc, curr) => {
+        console.log("skldfjlasjdlfjaldsfjlakdsjflk")
+      console.log("lksadlfajlkdsf ---------", grouped.owner.length)
+
         const roomData = curr.data() as RoomDocument;
 
         if (roomData.role === "owner") {
@@ -73,16 +79,20 @@ export default function Sidebar() {
     );
 
     setGroupedData(grouped); // ✅ This was missing earlier
+
+      console.log("lksadlfajlkdsf ---------", grouped.owner.length)
+
   }, [data]);
 
   const menuOptions = (
+    
     <>
       <NewDocumentButton />
 
       {/* Owner Docs */}
       {groupedData.owner.length === 0 ? (
         <h2 className="text-gray-500 font-semibold text-sm mt-4">
-          No documents found
+          No documents found 
         </h2>
       ) : (
         <>

@@ -21,6 +21,7 @@ interface RoomDocument extends DocumentData {
   role: "owner" | "editor";
   roomId: string;
   userId: string;
+  title?: string;
 }
 
 export default function Sidebar() {
@@ -38,61 +39,54 @@ export default function Sidebar() {
     user &&
       query(
         collectionGroup(db, "rooms"),
-        where("userId", "==", user.id) // ✅ Clerk's unique user ID
-        
+        where("userId", "==", user.id) // ✅ Using Clerk's user ID now
       )
-      
   );
 
   useEffect(() => {
     if (!data) return;
 
+    console.log("🔥 Raw Firestore docs:", data.docs.map((doc) => doc.data()));
+
     const grouped = data.docs.reduce<{
       owner: RoomDocument[];
       editor: RoomDocument[];
-    }>(
-      
-      (acc, curr) => {
-        console.log("skldfjlasjdlfjaldsfjlakdsjflk")
-      console.log("lksadlfajlkdsf ---------", grouped.owner.length)
+    }>((acc, curr) => {
+      const roomData = curr.data() as RoomDocument;
 
-        const roomData = curr.data() as RoomDocument;
-
-        if (roomData.role === "owner") {
-          acc.owner.push({
-            id: curr.id,
-            ...roomData,
-          });
-        } else {
-          acc.editor.push({
-            id: curr.id,
-            ...roomData,
-          });
-        }
-
-        return acc;
-      },
-      {
-        owner: [],
-        editor: [],
+      if (roomData.role === "owner") {
+        acc.owner.push({
+          id: curr.id,
+          ...roomData,
+        });
+      } else {
+        acc.editor.push({
+          id: curr.id,
+          ...roomData,
+        });
       }
-    );
 
-    setGroupedData(grouped); // ✅ This was missing earlier
+      return acc;
+    }, {
+      owner: [],
+      editor: [],
+    });
 
-      console.log("lksadlfajlkdsf ---------", grouped.owner.length)
+    console.log("✅ Grouped Owners:", grouped.owner);
+    console.log("✅ Grouped Editors:", grouped.editor);
+    console.log("✅ Owner Count:", grouped.owner.length);
 
+    setGroupedData(grouped);
   }, [data]);
 
   const menuOptions = (
-    
     <>
       <NewDocumentButton />
 
       {/* Owner Docs */}
       {groupedData.owner.length === 0 ? (
         <h2 className="text-gray-500 font-semibold text-sm mt-4">
-          No documents found 
+          No documents found
         </h2>
       ) : (
         <>
@@ -101,7 +95,7 @@ export default function Sidebar() {
           </h2>
           {groupedData.owner.map((doc) => (
             <p key={doc.roomId} className="text-sm font-medium">
-              {doc.roomId}
+              {doc.title || `Untitled (${doc.roomId})`}
             </p>
           ))}
         </>
@@ -115,7 +109,7 @@ export default function Sidebar() {
           </h2>
           {groupedData.editor.map((doc) => (
             <p key={doc.roomId} className="text-sm font-medium">
-              {doc.roomId}
+              {doc.title || `Untitled (${doc.roomId})`}
             </p>
           ))}
         </>

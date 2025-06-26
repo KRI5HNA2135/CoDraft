@@ -1,20 +1,19 @@
-"use server";
+'use server';
 
-import { auth } from "@clerk/nextjs/server";
 import { adminDb } from "@/firebase-admin";
+import { auth } from "@clerk/nextjs/server";
 
-export async function createNewDoc() {
+export async function createNewDocument() {
+  auth.protect();
+
   const { userId, sessionClaims } = await auth();
 
-  if (!userId || !sessionClaims) {
-    throw new Error("Unauthorized");
-  }
-
   const email = sessionClaims?.email as string | undefined;
-  const fullName = sessionClaims?.name as string | undefined;
-  const image = sessionClaims?.picture as string | undefined;
+  const fullName = sessionClaims?.fullName as string | undefined;
+  const image = sessionClaims?.image as string | undefined;
 
-  if (!email || !fullName || !image) {
+  if (!email || !fullName || !image || !userId) {
+    console.error("Missing data:", { email, fullName, image, userId });
     throw new Error("Missing user info in session");
   }
 
@@ -26,11 +25,11 @@ export async function createNewDoc() {
 
   await adminDb
     .collection("users")
-    .doc(userId) // ✅ Correct doc path
+    .doc(userId) // ✅ use userId here instead of email
     .collection("rooms")
     .doc(docRef.id)
     .set({
-      userId: userId, // 🔥 Not email
+      userId, // ✅ store userId, not email
       role: "owner",
       createdAt: new Date(),
       roomId: docRef.id,

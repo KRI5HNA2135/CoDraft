@@ -2,7 +2,7 @@
 import { useTransition } from 'react'
 import { Button } from './ui/button'
 import { useRouter } from 'next/navigation';
-import { createNewDoc } from '@/actions/actions';
+import { createNewDocument } from '@/actions/actions';
 
 const NewDocumentButton = () => {
 
@@ -12,7 +12,7 @@ const NewDocumentButton = () => {
   const handleCreateNewDoc = () => {
     startTransition(async () => {
       try {
-        const {docId} = await createNewDoc();
+        const {docId} = await createNewDocument();
         router.push(`/doc/${docId}`)
       } catch (error) {
         console.error("Error Creating doc: ", error)

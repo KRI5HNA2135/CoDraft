@@ -25,6 +25,7 @@ interface RoomDocument extends DocumentData {
 }
 
 export default function Sidebar() {
+  console.log("asldkjflkasjdlfkkkkkkkkkkk")
   const { user } = useUser();
 
   const [groupedData, setGroupedData] = useState<{
@@ -44,7 +45,13 @@ export default function Sidebar() {
   );
 
   useEffect(() => {
+    console.log("🔥 useEffect triggered");
+  console.log("📦 data from useCollection:", data);
+  console.log("📋 loading:", loading);
+  console.log("❌ error:", error);
     if (!data) return;
+    console.log("hereeeee2");
+    
 
     console.log("🔥 Raw Firestore docs:", data.docs.map((doc) => doc.data()));
 

@@ -25,8 +25,20 @@ interface RoomDocument extends DocumentData {
 }
 
 export default function Sidebar() {
-  console.log("asldkjflkasjdlfkkkkkkkkkkk")
   const { user } = useUser();
+
+  const [queryReady, setQueryReady] = useState(false)
+
+  useEffect(() => {
+    if(user?.id) {
+      setQueryReady(true);
+      console.log("✅ Clerk user.id ready:", user.id);
+    }
+  }, [user]);
+
+  const userRoomsQuery = queryReady
+  ? query(collectionGroup(db, "rooms"), where("userId", "==", user?.id))
+  : null;
 
   const [groupedData, setGroupedData] = useState<{
     owner: RoomDocument[];
@@ -37,12 +49,7 @@ export default function Sidebar() {
   });
 
   const [data, loading, error] = useCollection(
-    user &&
-      query(
-        collectionGroup(db, "rooms"),
-        where("userId", "==", user.id) // ✅ Using Clerk's user ID now
-      )
-  );
+    userRoomsQuery);
 
   useEffect(() => {
     console.log("🔥 useEffect triggered");
@@ -146,3 +153,5 @@ export default function Sidebar() {
     </div>
   );
 }
+
+

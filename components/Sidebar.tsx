@@ -55,6 +55,7 @@ export default function Sidebar() {
     console.log("📦 data from useCollection:", data);
     console.log("📋 loading:", loading);
     console.log("❌ error:", error);
+    console.log("userRoomsQuery:",userRoomsQuery)
     if (!data) return;
     console.log("hereeeee2");
 

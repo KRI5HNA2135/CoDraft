@@ -27,18 +27,18 @@ interface RoomDocument extends DocumentData {
 export default function Sidebar() {
   const { user } = useUser();
 
-  const [queryReady, setQueryReady] = useState(false)
+  const [queryReady, setQueryReady] = useState(false);
 
   useEffect(() => {
-    if(user?.id) {
+    if (user?.id) {
       setQueryReady(true);
       console.log("✅ Clerk user.id ready:", user.id);
     }
   }, [user]);
 
   const userRoomsQuery = queryReady
-  ? query(collectionGroup(db, "rooms"), where("userId", "==", user?.id))
-  : null;
+    ? query(collectionGroup(db, "rooms"), where("userId", "==", user?.id))
+    : null;
 
   const [groupedData, setGroupedData] = useState<{
     owner: RoomDocument[];
@@ -48,43 +48,47 @@ export default function Sidebar() {
     editor: [],
   });
 
-  const [data, loading, error] = useCollection(
-    userRoomsQuery);
+  const [data, loading, error] = useCollection(userRoomsQuery);
 
   useEffect(() => {
     console.log("🔥 useEffect triggered");
-  console.log("📦 data from useCollection:", data);
-  console.log("📋 loading:", loading);
-  console.log("❌ error:", error);
+    console.log("📦 data from useCollection:", data);
+    console.log("📋 loading:", loading);
+    console.log("❌ error:", error);
     if (!data) return;
     console.log("hereeeee2");
-    
 
-    console.log("🔥 Raw Firestore docs:", data.docs.map((doc) => doc.data()));
+    console.log(
+      "🔥 Raw Firestore docs:",
+      data.docs.map((doc) => doc.data())
+    );
 
     const grouped = data.docs.reduce<{
       owner: RoomDocument[];
       editor: RoomDocument[];
-    }>((acc, curr) => {
-      const roomData = curr.data() as RoomDocument;
+    }>(
+      (acc, curr) => {
+        const roomData = curr.data() as RoomDocument;
 
-      if (roomData.role === "owner") {
-        acc.owner.push({
-          id: curr.id,
-          ...roomData,
-        });
-      } else {
-        acc.editor.push({
-          id: curr.id,
-          ...roomData,
-        });
+        if (roomData.role === "owner") {
+          acc.owner.push({
+            id: curr.id,
+            ...roomData,
+          });
+        } else {
+          acc.editor.push({
+            id: curr.id,
+            ...roomData,
+          });
+        }
+
+        return acc;
+      },
+      {
+        owner: [],
+        editor: [],
       }
-
-      return acc;
-    }, {
-      owner: [],
-      editor: [],
-    });
+    );
 
     console.log("✅ Grouped Owners:", grouped.owner);
     console.log("✅ Grouped Editors:", grouped.editor);
@@ -153,5 +157,3 @@ export default function Sidebar() {
     </div>
   );
 }
-
-

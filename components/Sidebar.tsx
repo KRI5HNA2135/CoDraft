@@ -8,7 +8,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { MenuIcon } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import NewDocumentButton from "./NewDocumentButton";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { useUser } from "@clerk/nextjs";
@@ -17,6 +17,7 @@ import { db } from "@/firebase";
 import { DocumentData } from "firebase-admin/firestore";
 
 interface RoomDocument extends DocumentData {
+  id?: string;
   createdAt: string;
   role: "owner" | "editor";
   roomId: string;
@@ -27,42 +28,27 @@ interface RoomDocument extends DocumentData {
 export default function Sidebar() {
   const { user } = useUser();
 
-  const [queryReady, setQueryReady] = useState(false);
+  const userRoomsQuery = useMemo(() => {
+    if (!user?.id) return null;
+    return query(collectionGroup(db, "rooms"), where("userId", "==", user.id));
+  }, [user?.id]);
 
-  useEffect(() => {
-    if (user?.id) {
-      setQueryReady(true);
-      console.log("✅ Clerk user.id ready:", user.id);
-    }
-  }, [user]);
-
-  const userRoomsQuery = queryReady
-    ? query(collectionGroup(db, "rooms"), where("userId", "==", user?.id))
-    : null;
+  const [data, loading, error] = useCollection(userRoomsQuery);
 
   const [groupedData, setGroupedData] = useState<{
     owner: RoomDocument[];
     editor: RoomDocument[];
-  }>({
-    owner: [],
-    editor: [],
-  });
-
-  const [data, loading, error] = useCollection(userRoomsQuery);
+  }>({ owner: [], editor: [] });
 
   useEffect(() => {
     console.log("🔥 useEffect triggered");
-    console.log("📦 data from useCollection:", data);
+    console.log("📦 Firestore data:", data);
     console.log("📋 loading:", loading);
     console.log("❌ error:", error);
-    console.log("userRoomsQuery:",userRoomsQuery)
-    if (!data) return;
-    console.log("hereeeee2");
+    console.log("🧠 userRoomsQuery:", userRoomsQuery);
+    console.log("✅ Clerk user.id:", user?.id);
 
-    console.log(
-      "🔥 Raw Firestore docs:",
-      data.docs.map((doc) => doc.data())
-    );
+    if (!data || loading || !user?.id) return;
 
     const grouped = data.docs.reduce<{
       owner: RoomDocument[];
@@ -72,31 +58,20 @@ export default function Sidebar() {
         const roomData = curr.data() as RoomDocument;
 
         if (roomData.role === "owner") {
-          acc.owner.push({
-            id: curr.id,
-            ...roomData,
-          });
+          acc.owner.push({ id: curr.id, ...roomData });
         } else {
-          acc.editor.push({
-            id: curr.id,
-            ...roomData,
-          });
+          acc.editor.push({ id: curr.id, ...roomData });
         }
 
         return acc;
       },
-      {
-        owner: [],
-        editor: [],
-      }
+      { owner: [], editor: [] }
     );
 
     console.log("✅ Grouped Owners:", grouped.owner);
     console.log("✅ Grouped Editors:", grouped.editor);
-    console.log("✅ Owner Count:", grouped.owner.length);
-
     setGroupedData(grouped);
-  }, [data]);
+  }, [data, loading, user?.id, userRoomsQuery]);
 
   const menuOptions = (
     <>
@@ -113,7 +88,7 @@ export default function Sidebar() {
             My Documents
           </h2>
           {groupedData.owner.map((doc) => (
-            <p key={doc.roomId} className="text-sm font-medium">
+            <p key={doc.roomId} className="text-sm font-medium truncate">
               {doc.title || `Untitled (${doc.roomId})`}
             </p>
           ))}
@@ -127,7 +102,7 @@ export default function Sidebar() {
             Shared with me
           </h2>
           {groupedData.editor.map((doc) => (
-            <p key={doc.roomId} className="text-sm font-medium">
+            <p key={doc.roomId} className="text-sm font-medium truncate">
               {doc.title || `Untitled (${doc.roomId})`}
             </p>
           ))}
@@ -158,3 +133,5 @@ export default function Sidebar() {
     </div>
   );
 }
+
+
